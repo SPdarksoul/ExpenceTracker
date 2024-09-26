@@ -1,4 +1,4 @@
-Expense Tracker App
+<h1>Expense Tracker App</h1>
 
 Welcome to the Expense Tracker App! This modern, user-friendly application helps you manage and track your daily expenses effortlessly.
 Built with Jetpack Compose, it offers a sleek interface and seamless navigation to ensure a smooth experience.

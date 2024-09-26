@@ -29,7 +29,7 @@
 
         <!-- Accessibility Service Definition -->
         <service
-            android:name=".accessibility.PaymentAccessibilityService"
+            android:name=".accessibility.PaymentNotificationListener"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:exported="true">
             <intent-filter>
