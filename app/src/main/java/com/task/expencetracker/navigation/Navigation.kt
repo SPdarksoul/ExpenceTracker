@@ -30,7 +30,30 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
         }
         composable(Screen.Create.route) { CreateExpenseScreen() }
         composable(Screen.Stats.route) { StatsScreen(navController) }
-        composable(Screen.Profile.route) { ProfileScreen(navController) }
+
+        composable(Screen.Profile.route) {
+            // Fetch user data (you can fetch from ViewModel or hardcode for now)
+            val userName = "John Doe" // Replace with actual data from ViewModel or repository
+            val userEmail = "johndoe@email.com" // Replace with actual data
+            val profilePictureUrl: String? = null // Replace with actual image URL if available
+
+            // Pass the required parameters to ProfileScreen
+            ProfileScreen(
+                userName = userName,
+                userEmail = userEmail,
+                profilePictureUrl = profilePictureUrl,
+                onLogoutClick = {
+                    // Handle logout action here
+                },
+                onEditProfileClick = {
+                    // Handle profile edit action here
+                },
+                onImageSelected = { uri ->
+                    // Handle image selection here
+                }
+            )
+        }
+
         composable(route = "/add_income") {
             AddExpense(navController, isIncome = true)
         }

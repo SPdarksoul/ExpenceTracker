@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.androidx.databinding.runtime)
     implementation(libs.androidx.core.i18n)
     implementation(libs.firebase.auth)
+    implementation(libs.androidx.ui.test.android)
+    implementation(libs.firebase.storage.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v115)
@@ -115,6 +117,6 @@ dependencies {
     implementation (libs.androidx.ui.v150)
 
 //fireBase
-
+    implementation("io.coil-kt:coil-compose:2.0.0")
     implementation(platform(libs.firebase.bom))
 }
