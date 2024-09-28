@@ -1,13 +1,25 @@
 package com.task.expencetracker.accessibility
 
 import android.app.Notification
-import android.content.Context
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import android.widget.Toast
+import com.task.expencetracker.data.dataTransaction.Transaction
+import com.task.expencetracker.viewModel.TransactionViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PaymentNotificationListener : NotificationListenerService() {
+
+    // This function will be called whenever a notification is detected
+    private lateinit var viewModel: TransactionViewModel
+
+    // This function can be called from your main activity to set the ViewModel instance
+    fun setViewModel(viewModel: TransactionViewModel) {
+        this.viewModel = viewModel
+    }
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val notification = sbn.notification
@@ -22,7 +34,7 @@ class PaymentNotificationListener : NotificationListenerService() {
 
         // Check if the notification text contains payment-related keywords
         if (isPaymentNotification(text)) {
-            handlePaymentNotification(this, title, text)
+            handlePaymentNotification(title, text)
         }
     }
 
@@ -31,15 +43,30 @@ class PaymentNotificationListener : NotificationListenerService() {
         return keywords.any { keyword -> text.contains(keyword, ignoreCase = true) }
     }
 
-    private fun handlePaymentNotification(context: Context, title: String, text: String) {
+    private fun handlePaymentNotification(title: String, text: String) {
         Log.d("PaymentNotification", "Payment detected: Title: $title, Text: $text")
-        Toast.makeText(context, "Payment detected: $text", Toast.LENGTH_SHORT).show()
-        savePaymentDetailsToDatabase(title, text)
+        Toast.makeText(this, "Payment detected: $text", Toast.LENGTH_SHORT).show()
+
+        // Extract payment details (for example: amount, type)
+        val amount = extractAmountFromText(text)
+        val type = if (text.contains("debited", ignoreCase = true)) "Expense" else "Income"
+
+        // Notify ViewModel to save the transaction to the database
+        savePaymentDetailsToDatabase(title, text, amount, type)
     }
 
-    private fun savePaymentDetailsToDatabase(title: String, text: String) {
-        Log.d("PaymentNotification", "Saving payment details to database: Title: $title, Text: $text")
-        // TODO: Add actual database saving logic here
+    private fun savePaymentDetailsToDatabase(title: String, text: String, amount: Double, type: String) {
+        // Create a transaction object
+        val transaction = Transaction(
+            title = title,
+            description = text,
+            amount = amount,
+            type = type,
+            timestamp = System.currentTimeMillis(),
+        )
+
+        // Notify ViewModel to save the transaction
+        viewModel.addTransaction(transaction)
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
@@ -52,5 +79,16 @@ class PaymentNotificationListener : NotificationListenerService() {
 
     override fun onListenerDisconnected() {
         Log.d("PaymentNotification", "Notification Listener Disconnected")
+    }
+
+    private fun extractAmountFromText(text: String): Double {
+        val regex = Regex("""\d+([,.]\d{1,2})?""") // Match any number with optional decimal
+        val matchResult = regex.find(text)
+        return matchResult?.value?.replace(",", "")?.toDoubleOrNull() ?: 0.0
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 }

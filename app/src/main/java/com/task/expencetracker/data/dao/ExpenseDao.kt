@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.task.expencetracker.data.dataTransaction.AddPaymentTransacton
 
 import com.task.expencetracker.data.dataTransaction.PaymentTransaction
+import com.task.expencetracker.data.dataTransaction.Transaction
 import com.task.expencetracker.data.model.ExpenceEntity // Corrected spelling
 import kotlinx.coroutines.flow.Flow
 
@@ -44,12 +45,15 @@ interface ExpenseDao {
     suspend fun updateExpense(ExpenceEntity: ExpenceEntity)
 
     // Retrieve all transactions from the payment_transactions table
-    @Query("SELECT * FROM payment_transactions")
-    fun getAllTransactions(): Flow<List<PaymentTransaction>>
+    @Query("SELECT * FROM transactions")
+    fun getAllTransactions(): Flow<List<Transaction>>
 
     // Insert a new transaction into the payment_transactions table
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: PaymentTransaction)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertliveTransaction(transaction: Transaction)
 
     // Retrieve all payments from the payment_table
     @Query("SELECT * FROM payment_table")

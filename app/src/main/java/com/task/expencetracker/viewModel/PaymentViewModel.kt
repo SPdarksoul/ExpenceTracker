@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.task.expencetracker.data.dataTransaction.PaymentTransaction
+import com.task.expencetracker.data.dataTransaction.Transaction
 import com.task.expencetracker.data.repo.PaymentRepository
 import kotlinx.coroutines.launch
 
 class PaymentViewModel(private val repository: PaymentRepository) : ViewModel() {
-    val payments: LiveData<List<PaymentTransaction>> = repository.getAllPayments().asLiveData()
+    val payments: LiveData<List<Transaction>> = repository.getAllPayments().asLiveData()
 
 
     fun addPayment(payment: PaymentTransaction) {

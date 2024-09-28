@@ -1,35 +1,28 @@
 package com.task.expensetracker
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
 import com.task.expencetracker.R
 import com.task.expencetracker.bottomNavigation.BottomNavigationBar
 import com.task.expencetracker.data.routes.Screen
 import com.task.expencetracker.navigation.Navigation
 import com.task.expencetracker.topBar.DrawerContent
 import com.task.expencetracker.topBar.NavItem
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -45,6 +38,9 @@ fun MainScreen() {
         delay(2000) // Simulate network call or data loading
         isRefreshing = false
     }
+
+    // Gesture detection for pull down
+    var offsetY by remember { mutableStateOf(0f) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -84,25 +80,24 @@ fun MainScreen() {
                         .padding(paddingValues)
                         .pointerInput(Unit) {
                             detectVerticalDragGestures { change, dragAmount ->
-                                if (dragAmount > 20 && !isRefreshing) { // Trigger on pull down
+                                offsetY += dragAmount
+                                if (offsetY > 100 && !isRefreshing) {
                                     scope.launch { refreshData() }
+                                    offsetY = 0f
                                 }
                                 change.consume()
                             }
                         }
                 ) {
-                    // Use the Navigation composable function
+                    // Navigation Composable
                     Navigation(navController = navController, modifier = Modifier.fillMaxSize())
 
-                    // Show a simple refresh indicator (you can replace this with a more sophisticated UI)
+                    // Custom refresh indicator (CircularProgressIndicator)
                     if (isRefreshing) {
-                        Image(
-                            painter = painterResource(id = R.drawable.loading), // Replace with your image resource
-                            contentDescription = "Custom Icon",
+                        CircularProgressIndicator(
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
-                                .size(50.dp)
-                                .padding(top = 48.dp)
+                                .padding(top = 16.dp)
                         )
                     }
                 }

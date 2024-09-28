@@ -1,5 +1,7 @@
 package com.task.expencetracker.data.util
 
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import com.task.expencetracker.R
 import com.task.expencetracker.data.model.ExpenceEntity
 import java.text.NumberFormat
@@ -37,6 +39,7 @@ object Utils {
             "Invalid Date"
         }
     }
+
     // Format currency amount to string
     fun formatCurrency(amount: Double): String {
         val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
@@ -85,7 +88,37 @@ object Utils {
             "Paypal" -> R.drawable.ic_paypal
             "Netflix" -> R.drawable.ic_netflix
             "Starbucks" -> R.drawable.ic_starbucks
-            else -> R.drawable.ic_launcher_foreground
+            "Salary" -> R.drawable.salary
+            "Investment" -> R.drawable.investments
+            "OtherIncome" -> R.drawable.ic_starbucks
+            else -> R.drawable.otherincome
         }
+    }
+
+    object Utils {
+        val inputFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        fun formatStringDateToMonthYear(date: String): String {
+            return try {
+                LocalDate.parse(date, inputFormatter)
+                    .format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+            } catch (e: Exception) {
+                "Unknown Date"
+            }
+        }
+
+        fun formatStringDateToDay(date: String): String {
+            return try {
+                LocalDate.parse(date, inputFormatter).format(DateTimeFormatter.ofPattern("dd MMM"))
+            } catch (e: Exception) {
+                "Unknown Day"
+            }
+        }
+
+        fun formatCurrency(amount: Double): String {
+            return String.format("$%.2f", amount)
+        }
+
+
     }
 }

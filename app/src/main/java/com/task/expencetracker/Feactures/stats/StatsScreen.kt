@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -28,10 +30,11 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.task.expencetracker.Feactures.home.TransactionList
+
 import com.task.expencetracker.R
-import com.task.expencetracker.data.model.mapSummaryToEntity
+import com.task.expencetracker.data.model.ExpenceEntity
 import com.task.expencetracker.data.util.Utils
+import com.task.expencetracker.features.transactionScreen.TransactionList
 import com.task.expencetracker.uicomponents.ExpenseTextView
 import com.task.expencetracker.viewModel.StatsViewModel
 
@@ -55,30 +58,34 @@ fun StatsScreen(navController: NavController, viewModel: StatsViewModel = hiltVi
             }
         }
     ) { innerPadding ->
-
         val entries by viewModel.entries.collectAsState()
-
         val chartEntries = viewModel.getEntriesForChart(entries)
 
-        Column(modifier = Modifier.padding(innerPadding)) {
-            // Display chart with all data
-            LineChart(entries = chartEntries)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Transaction list or any additional UI components
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            // Line Chart for stats visualization
+            LineChart(expenses = chartEntries)
+            Spacer(modifier = Modifier.padding(8.dp))
+            val expenses by viewModel.getSortedExpenses().collectAsState(initial = emptyList())
             TransactionList(
-                modifier = Modifier.fillMaxWidth(),
-                list = entries.map { mapSummaryToEntity(it) }, // Ensure correct mapping
-                title = "All Transactions"
+                modifier = Modifier
+                    .fillMaxWidth(),
+
+                list = expenses
             )
+
         }
     }
+
+
 }
 
 
 @Composable
-fun LineChart(entries: List<Entry>) {
+fun LineChart(expenses: List<Entry>) {
     val context = LocalContext.current
     AndroidView(
         factory = {
@@ -92,7 +99,7 @@ fun LineChart(entries: List<Entry>) {
         val lineChart = view.findViewById<LineChart>(R.id.lineChart)
 
         // Create datasets for the chart
-        val dataSet = LineDataSet(entries, "Expenses & Income").apply {
+        val dataSet = LineDataSet(expenses, "Expenses & Income").apply {
             color = android.graphics.Color.parseColor("#FF2F7E79")
             valueTextColor = android.graphics.Color.BLACK
             lineWidth = 3f
