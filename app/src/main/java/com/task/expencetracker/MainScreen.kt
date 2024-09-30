@@ -11,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.task.expencetracker.R
 import com.task.expencetracker.bottomNavigation.BottomNavigationBar
@@ -19,6 +21,8 @@ import com.task.expencetracker.data.routes.Screen
 import com.task.expencetracker.navigation.Navigation
 import com.task.expencetracker.topBar.DrawerContent
 import com.task.expencetracker.topBar.NavItem
+import com.task.expencetracker.viewmodel.AuthViewModel
+import com.task.expencetracker.viewmodel.AuthViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -28,6 +32,11 @@ fun MainScreen() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // Get AuthViewModel using viewModel() and passing AuthViewModelFactory
+    val authViewModel: AuthViewModel = viewModel(
+        factory = AuthViewModelFactory(LocalContext.current.applicationContext)
+    )
 
     // State to manage loading and refreshing
     var isRefreshing by remember { mutableStateOf(false) }
@@ -89,8 +98,9 @@ fun MainScreen() {
                             }
                         }
                 ) {
-                    // Navigation Composable
-                    Navigation(navController = navController, modifier = Modifier.fillMaxSize())
+
+                    // Navigation Composable with AuthViewModel passed in as a parameter.
+                    Navigation(navController, authViewModel)
 
                     // Custom refresh indicator (CircularProgressIndicator)
                     if (isRefreshing) {

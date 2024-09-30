@@ -10,19 +10,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.task.expencetracker.Feactures.home.HomeScreen
+import com.task.expencetracker.authentictaion.AuthScreen
+
 import com.task.expencetracker.data.routes.Screen
 import com.task.expencetracker.features.createExpense.CreateExpenseScreen
 import com.task.expencetracker.features.search.TransactionSearchScreen
 import com.task.expencetracker.features.stats.StatsScreen
+
 import com.task.expencetracker.viewModel.ExpenseViewModel
+import com.task.expencetracker.viewmodel.AuthViewModel
+import com.task.expensetracker.MainScreen
+
 
 @Composable
-fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Home.route,
-        modifier = modifier
-    ) {
+fun Navigation(navController: NavHostController, authViewModel: AuthViewModel) {
+    NavHost(navController, startDestination = "auth") {
+        composable("auth") { AuthScreen(navController, authViewModel) }
+        composable(route = Screen.Main.route) {
+            MainScreen()
+        }
+
         composable(Screen.Home.route) { HomeScreen(navController) }
         composable(Screen.Search.route) {
             val viewModel: ExpenseViewModel = hiltViewModel()
