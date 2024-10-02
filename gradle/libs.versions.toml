@@ -58,6 +58,7 @@ firebaseAuth = "23.0.0"
 uiVersion = "1.5.0"
 uiTestAndroid = "1.7.0"
 firebaseStorageKtx = "21.0.0"
+playServicesAuth = "21.2.0"
 
 [libraries]
 #androidx-activity-compose-v180 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
@@ -132,6 +133,7 @@ androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref 
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

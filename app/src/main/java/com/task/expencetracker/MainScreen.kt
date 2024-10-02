@@ -21,8 +21,7 @@ import com.task.expencetracker.data.routes.Screen
 import com.task.expencetracker.navigation.Navigation
 import com.task.expencetracker.topBar.DrawerContent
 import com.task.expencetracker.topBar.NavItem
-import com.task.expencetracker.viewmodel.AuthViewModel
-import com.task.expencetracker.viewmodel.AuthViewModelFactory
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -34,9 +33,7 @@ fun MainScreen() {
     val scope = rememberCoroutineScope()
 
     // Get AuthViewModel using viewModel() and passing AuthViewModelFactory
-    val authViewModel: AuthViewModel = viewModel(
-        factory = AuthViewModelFactory(LocalContext.current.applicationContext)
-    )
+
 
     // State to manage loading and refreshing
     var isRefreshing by remember { mutableStateOf(false) }
@@ -100,7 +97,7 @@ fun MainScreen() {
                 ) {
 
                     // Navigation Composable with AuthViewModel passed in as a parameter.
-                    Navigation(navController, authViewModel)
+                    Navigation(navController)
 
                     // Custom refresh indicator (CircularProgressIndicator)
                     if (isRefreshing) {

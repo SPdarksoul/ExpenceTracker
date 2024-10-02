@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.ui.test.android)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.play.services.auth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v115)

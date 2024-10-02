@@ -8,11 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.task.expencetracker.accessibility.PaymentNotificationListener
 import com.task.expencetracker.database.ExpenseDatabase
-import com.task.expencetracker.navigation.Navigation
 import com.task.expencetracker.ui.theme.ExpenceTrackerTheme
 import com.task.expencetracker.viewModel.TransactionViewModel
 import com.task.expencetracker.viewModel.TransactionViewModelFactory
@@ -41,9 +38,9 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     setContent {
-                 MainScreen()
+                        MainScreen()
+                    }
                 }
             }
         }
-    }
-}}
+    }}
