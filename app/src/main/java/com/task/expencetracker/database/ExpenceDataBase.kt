@@ -15,7 +15,8 @@ import com.task.expencetracker.data.model.ExpenceEntity
 
 @Database(
     entities = [ExpenceEntity::class, PaymentTransaction::class, AddPaymentTransacton::class, Transaction ::class],
-    version = 9,
+    version = 10,
+
     exportSchema = false // Disable schema export
 )
 abstract class ExpenseDatabase : RoomDatabase() {

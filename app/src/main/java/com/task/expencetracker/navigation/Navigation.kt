@@ -8,18 +8,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.task.expencetracker.Feactures.home.HomeScreen
+
 import com.task.expencetracker.data.routes.Screen
 import com.task.expencetracker.features.createExpense.CreateExpenseScreen
+
+
 import com.task.expencetracker.features.search.TransactionSearchScreen
 import com.task.expencetracker.features.stats.StatsScreen
 import com.task.expencetracker.viewModel.ExpenseViewModel
 import com.task.expensetracker.MainScreen
+import com.task.expensetracker.features.profile.CategoriesScreen
 
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController, startDestination = "auth") {
-        composable("home") { HomeScreen(navController) }
+    NavHost(navController, startDestination = "home") {
         composable(route = Screen.Main.route) {
             MainScreen()
         }
@@ -31,6 +34,7 @@ fun Navigation(navController: NavHostController) {
         }
         composable(Screen.Create.route) { CreateExpenseScreen() }
         composable(Screen.Stats.route) { StatsScreen(navController) }
+        composable(Screen.Profile.route) { CategoriesScreen(onCategoryClick = { category ->}) }
 
 
 

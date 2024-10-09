@@ -58,7 +58,7 @@ fun MainScreen() {
                     NavItem(route = Screen.Search.route, icon = R.drawable.baseline_search_24, label = "Search"),
                     NavItem(route = Screen.Create.route, icon = R.drawable.create, label = "Create"),
                     NavItem(route = Screen.Stats.route, icon = R.drawable.stats, label = "Stats"),
-                    NavItem(route = Screen.Profile.route, icon = R.drawable.baseline_person_24, label = "Profile")
+                    NavItem(route = Screen.Profile.route, icon = R.drawable.baseline_person_24, label = "category")
                 )
             )
         }

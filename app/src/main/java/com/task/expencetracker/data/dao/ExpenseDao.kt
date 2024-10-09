@@ -66,4 +66,14 @@ interface ExpenseDao {
     // Delete a payment from the payment_table by ID
     @Query("DELETE FROM payment_table WHERE id = :id")
     suspend fun deletePayment(id: Long)
+
+
+    @Query("SELECT * FROM expense_table WHERE strftime('%Y-%m', date) = :month")
+    suspend fun getExpensesByMonth(month: String): List<ExpenceEntity>
+
+    @Query("SELECT * FROM expense_table WHERE date = :date")
+    suspend fun getExpensesByDate(date: String): List<ExpenceEntity>
+
+    @Query("SELECT * FROM expense_table WHERE date BETWEEN :startDate AND :endDate")
+    suspend fun getExpensesBetweenDates(startDate: String, endDate: String): List<ExpenceEntity>
 }

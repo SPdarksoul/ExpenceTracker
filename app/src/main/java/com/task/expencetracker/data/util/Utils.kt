@@ -14,14 +14,17 @@ import java.util.Date
 import java.util.Locale
 
 object Utils {
+    // Date formatters
     val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US)
+    private val inputFormatterDDMM = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US) // New formatter for dd/MM/yyyy
     private val monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.US)
     private val dayFormatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy", Locale.US)
 
+    // Format date string to "Month Year"
     fun formatStringDateToMonthYear(date: String?): String {
         if (date.isNullOrEmpty()) return "Invalid Date"
         return try {
-            val localDate = LocalDate.parse(date, inputFormatter)
+            val localDate = LocalDate.parse(date, inputFormatterDDMM) // Use dd/MM/yyyy formatter
             localDate.format(monthYearFormatter)
         } catch (e: DateTimeParseException) {
             println("Date parsing error for '$date': ${e.message}") // Debugging log
@@ -29,10 +32,11 @@ object Utils {
         }
     }
 
+    // Format date string to "Day, Month Day, Year"
     fun formatStringDateToDay(date: String?): String {
         if (date.isNullOrEmpty()) return "Invalid Date"
         return try {
-            val localDate = LocalDate.parse(date, inputFormatter)
+            val localDate = LocalDate.parse(date, inputFormatterDDMM) // Use dd/MM/yyyy formatter
             localDate.format(dayFormatter)
         } catch (e: DateTimeParseException) {
             println("Date parsing error for '$date': ${e.message}") // Debugging log
@@ -46,7 +50,7 @@ object Utils {
         return currencyFormat.format(amount)
     }
 
-    // Convert date string to milliseconds
+    // Convert date string to milliseconds (dd/MM/yyyy format)
     fun getMilliFromDate(date: String?): Long {
         if (date.isNullOrEmpty()) {
             println("Date is null or empty.")
@@ -70,19 +74,19 @@ object Utils {
         return String.format("%.2f", value)
     }
 
-    // Format milliseconds to date string
+    // Format milliseconds to date string (dd/MM/yyyy)
     fun formatDateToHumanReadableForm(dateInMillis: Long): String {
         val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return dateFormatter.format(Date(dateInMillis))
     }
 
-    // Format milliseconds to short date string for charts
+    // Format milliseconds to short date string for charts (dd-MMM)
     fun formatDateForChart(dateInMillis: Long): String {
         val dateFormatter = SimpleDateFormat("dd-MMM", Locale.getDefault())
         return dateFormatter.format(Date(dateInMillis))
     }
 
-
+    // Get item icon based on the title of the expense entity
     fun getItemIcon(item: ExpenceEntity): Int {
         return when (item.title) {
             "Paypal" -> R.drawable.ic_paypal
@@ -93,32 +97,5 @@ object Utils {
             "OtherIncome" -> R.drawable.ic_starbucks
             else -> R.drawable.otherincome
         }
-    }
-
-    object Utils {
-        val inputFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-        fun formatStringDateToMonthYear(date: String): String {
-            return try {
-                LocalDate.parse(date, inputFormatter)
-                    .format(DateTimeFormatter.ofPattern("MMMM yyyy"))
-            } catch (e: Exception) {
-                "Unknown Date"
-            }
-        }
-
-        fun formatStringDateToDay(date: String): String {
-            return try {
-                LocalDate.parse(date, inputFormatter).format(DateTimeFormatter.ofPattern("dd MMM"))
-            } catch (e: Exception) {
-                "Unknown Day"
-            }
-        }
-
-        fun formatCurrency(amount: Double): String {
-            return String.format("$%.2f", amount)
-        }
-
-
     }
 }

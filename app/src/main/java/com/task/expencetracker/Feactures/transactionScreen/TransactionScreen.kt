@@ -83,14 +83,7 @@ fun TransactionList(
                         modifier = Modifier.align(Alignment.CenterStart)
                     )
                     if (title == "Recent Transactions") {
-                        Text(
-                            text = "See all",
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .clickable { /* Handle click action */ },
-                            fontSize = 16.sp,
-                            color = Color.Blue
-                        )
+
                     }
                 }
                 Spacer(modifier = Modifier.height(12.dp))
