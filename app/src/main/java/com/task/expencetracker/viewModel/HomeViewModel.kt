@@ -1,5 +1,6 @@
 package com.task.expencetracker.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.task.expencetracker.data.dao.ExpenseDao
@@ -23,17 +24,34 @@ class HomeViewModel @Inject constructor(val dao: ExpenseDao) : ViewModel() {
 
 //    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-    private fun getMilliFromDate(date: String?): Long {
+     fun getMilliFromDate(date: String?): Long {
         if (date.isNullOrEmpty()) return -1L
-        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        return try {
-            val parsedDate = formatter.parse(date)
-            parsedDate?.time ?: -1L
-        } catch (e: ParseException) {
-            e.printStackTrace()
-            -1L
+        val cleanedDate = date.trim()  // Remove leading/trailing spaces
+        Log.d("DateParser", "Raw date received: $cleanedDate")
+
+        val formats = listOf(
+            "dd/MM/yyyy",  // Expected format
+            "yyyy-MM-dd",  // ISO format
+            "MM/dd/yyyy"   // US format
+        )
+
+        for (format in formats) {
+            try {
+                val formatter = SimpleDateFormat(format, Locale.getDefault())
+                val parsedDate = formatter.parse(cleanedDate)
+                if (parsedDate != null) {
+                    Log.d("DateParser", "Successfully parsed date: $cleanedDate with format: $format")
+                    return parsedDate.time
+                }
+            } catch (e: ParseException) {
+                Log.d("DateParser", "Failed to parse with format: $format")
+            }
         }
+
+        Log.e("DateParser", "Failed to parse date: $cleanedDate")
+        return -1L
     }
+
 
     private fun sortExpensesByDate(list: List<ExpenceEntity>): List<ExpenceEntity> {
         return list.sortedBy {

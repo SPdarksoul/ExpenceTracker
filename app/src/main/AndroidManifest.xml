@@ -29,7 +29,7 @@
 
         <!-- Accessibility Service Definition -->
         <service
-            android:name=".accessibility.PaymentAccessibilityService"
+            android:name=".accessibility.AccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:exported="true">
             <intent-filter>
@@ -40,7 +40,7 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <!-- SMS Receiver Definition -->
+<!--         SMS Receiver Definition -->
         <receiver
             android:name=".accessibility.SmsReceiver"
             android:permission="android.permission.RECEIVE_SMS"

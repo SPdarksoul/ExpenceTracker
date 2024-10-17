@@ -5,15 +5,15 @@ data class ExpenseSummary(
     val date: String,
     val total_amount: Double
 )
-
-fun mapEntityToSummary(entity: ExpenceEntity): ExpenseSummary {
-    return ExpenseSummary(
-        date = entity.date,
-        total_amount = entity.total_amount,
-        type = entity.type // Assuming ExpenseSummary has a 'type' field
-    )
-}
-fun mapSummaryToEntity(summary: ExpenseSummary): ExpenceEntity {
+//
+//fun mapEntityToSummary(entity: ExpenceEntity): ExpenceEntity {
+//    return ExpenceEntity(
+//        date = entity.date,
+//        total_amount = entity.total_amount,
+//        type = entity.type // Assuming ExpenseSummary has a 'type' field
+//    )
+//}
+fun mapSummaryToEntity(summary: ExpenceEntity): ExpenceEntity {
     return ExpenceEntity(
         id = 0, // Assuming an auto-generated or placeholder ID
         title = "Expense", // Placeholder title or extract from summary if available

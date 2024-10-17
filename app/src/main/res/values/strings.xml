@@ -1,3 +1,5 @@
 <resources>
     <string name="Sagar">ExpenceTracker</string>
+
+    <string name="web_client_id">771d9cdcb10ca8cfee1f6e2ac2bb28afe510c2e4.apps.googleusercontent.com</string>
 </resources>

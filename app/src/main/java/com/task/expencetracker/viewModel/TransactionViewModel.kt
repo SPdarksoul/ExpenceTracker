@@ -1,32 +1,36 @@
 package com.task.expencetracker.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.task.expencetracker.data.dao.ExpenseDao
-import com.task.expencetracker.data.dataTransaction.AddPaymentTransacton
-import com.task.expencetracker.data.dataTransaction.PaymentTransaction
-import com.task.expencetracker.data.repo.TransactionRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import com.task.expencetracker.data.dataTransaction.Transaction
+import com.task.expencetracker.database.ExpenseDatabase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-@HiltViewModel
-class TransactionListViewModel @Inject constructor(private val dao: ExpenseDao) : ViewModel() {
 
-    val transactions: StateFlow<List<PaymentTransaction>> = dao.getAllTransactions().stateIn(
-        viewModelScope, SharingStarted.Lazily, emptyList()
-    )
+// ViewModel to manage transactions
+class TransactionViewModel(private val database: ExpenseDatabase) : ViewModel() {
 
-    fun insertTransaction(transaction: PaymentTransaction) {
+    // Observes all transactions in the database using Flow
+    val transactions: Flow<List<Transaction>> = database.expenseDao().getAllTransactions()
+
+    // Adds a new transaction to the database
+    fun addTransaction(transaction: Transaction) {
         viewModelScope.launch {
-            try {
-                dao.insertTransaction(transaction)
-            } catch (e: Exception) {
-                Log.e("TransactionViewModel", "Error inserting transaction: ${e.message}", e)
-            }
+            database.expenseDao().insertliveTransaction(transaction)
         }
+    }
+}
+
+// Factory to create TransactionViewModel with a database parameter
+class TransactionViewModelFactory(private val database: ExpenseDatabase) : ViewModelProvider.Factory {
+
+    // Create a new instance of the ViewModel
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return TransactionViewModel(database) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
