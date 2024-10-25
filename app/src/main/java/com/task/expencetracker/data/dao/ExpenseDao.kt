@@ -81,6 +81,6 @@ interface ExpenseDao {
     @Insert
     suspend fun addAlert(alert: TransactionAlert)
 
-    @Query("SELECT * FROM transaction_alert_table")
+    @Query("SELECT * FROM transaction_alerts") // Ensure correct table name
     fun getAllAlerts(): Flow<List<TransactionAlert>>
 }

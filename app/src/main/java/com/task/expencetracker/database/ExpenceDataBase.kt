@@ -16,7 +16,7 @@ import com.task.expencetracker.data.model.ExpenceEntity
 
 @Database(
     entities = [ExpenceEntity::class, PaymentTransaction::class, AddPaymentTransacton::class, Transaction ::class, TransactionAlert::class],
-    version = 12,
+    version = 14,
 
     exportSchema = false // Disable schema export
 )

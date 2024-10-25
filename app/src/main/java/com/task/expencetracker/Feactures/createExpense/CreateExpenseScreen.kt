@@ -1,8 +1,8 @@
 package com.task.expencetracker.features.createExpense
 
-import AlertViewModel
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,9 +21,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,19 +30,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.task.expencetracker.data.dataTransaction.TransactionAlert
-import com.task.expencetracker.uicomponents.ExpenseTextView
-import kotlinx.coroutines.flow.collectLatest
+import com.task.expencetracker.notification.cancelNotification
+import com.task.expencetracker.notification.scheduleNotification
+import com.task.expencetracker.viewModel.AlertViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun AlertSettingScreen(viewModel: AlertViewModel) {
+fun AlertSettingScreen(viewModel: AlertViewModel = hiltViewModel()) {
     var title by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
-    var dateTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var dateTime by remember { mutableStateOf(System.currentTimeMillis()) }
 
     // States for showing pickers
     var showDatePicker by remember { mutableStateOf(false) }
@@ -152,13 +153,16 @@ fun AlertSettingScreen(viewModel: AlertViewModel) {
         Button(
             onClick = {
                 if (title.isNotBlank() && amount.isNotBlank() && amount.toDoubleOrNull() != null && amount.toDouble() > 0) {
-                    viewModel.addAlert(TransactionAlert(
-                        title,
-                        amount.toDouble().toString(), // Assuming TransactionAlert expects Double for amount.
-                        dateTime))
+                    val alert = TransactionAlert(
+                        title = title,
+                        amount = amount.toDouble().toString(),
+                        dateTime = dateTime
+                    )
+                    viewModel.addAlert(alert)
+                    scheduleNotification(context, alert) // Schedule notification
                     title = ""
                     amount = ""
-                    dateTime = System.currentTimeMillis() // Reset to current time after adding alert.
+                    dateTime = System.currentTimeMillis() // Reset to current time after adding alert
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -173,19 +177,16 @@ fun AlertSettingScreen(viewModel: AlertViewModel) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Display list of alerts using LaunchedEffect to collect flow.
-        LaunchedEffect(Unit) {
-            viewModel.alerts.collectLatest { alerts ->
-                if (alerts.isEmpty()) {
-                    ExpenseTextView(
-                        "No alerts available", style = MaterialTheme.typography.bodyMedium)
-                } else {
-                    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                        alerts.forEach { alert ->
-                            AlertCard(alert)
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                    }
+        // Display list of alerts
+        val alertList by viewModel.alerts.collectAsState(initial = emptyList())
+
+        if (alertList.isEmpty()) {
+            Text("No alerts available", style = MaterialTheme.typography.bodyLarge)
+        } else {
+            Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                alertList.forEach { alert ->
+                    AlertCard(alert, viewModel, context)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
@@ -193,12 +194,14 @@ fun AlertSettingScreen(viewModel: AlertViewModel) {
 }
 
 @Composable
-fun AlertCard(alert: TransactionAlert) {
+fun AlertCard(alert: TransactionAlert, viewModel: AlertViewModel, context: Context) {
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     val dateText = dateFormatter.format(Date(alert.dateTime))
 
     Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -207,6 +210,18 @@ fun AlertCard(alert: TransactionAlert) {
             Text(text = "Amount: $${alert.amount}", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = "Date: $dateText", style = MaterialTheme.typography.bodySmall)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Settle Button
+            Button(onClick = {
+                viewModel.deleteAlert(alert)
+                cancelNotification(context, alert)
+            }) {
+                Text("Settle")
+            }
         }
     }
 }
+
+

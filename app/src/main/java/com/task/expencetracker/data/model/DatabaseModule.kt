@@ -16,26 +16,21 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
-    // Provide a single instance of ExpenseDatabase
     @Provides
     @Singleton
     fun provideExpenseDatabase(@ApplicationContext context: Context): ExpenseDatabase {
         return Room.databaseBuilder(
             context,
             ExpenseDatabase::class.java,
-            "expense_tracker_db"
-        )
-            .fallbackToDestructiveMigration()
-            .build()
+            "expense_database"
+        ).fallbackToDestructiveMigration().build()
     }
 
-    // Provide the DAO for ExpenseDatabase
     @Provides
     fun provideExpenseDao(expenseDatabase: ExpenseDatabase): ExpenseDao {
         return expenseDatabase.expenseDao()
     }
 
-    // Provide the TransactionRepository with ExpenseDao
     @Provides
     @Singleton
     fun provideTransactionRepository(expenseDao: ExpenseDao): TransactionRepository {

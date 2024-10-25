@@ -1,7 +1,7 @@
 package com.task.expencetracker.navigation
 
-
 import AddExpense
+
 import SettingsScreen
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -9,40 +9,52 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.task.expencetracker.Feactures.home.HomeScreen
+
 import com.task.expencetracker.data.routes.Screen
 import com.task.expencetracker.features.createExpense.AlertSettingScreen
 import com.task.expencetracker.features.search.TransactionSearchScreen
 import com.task.expencetracker.features.stats.StatsScreen
 import com.task.expencetracker.viewModel.AlertViewModel
+
 import com.task.expencetracker.viewModel.ExpenseViewModel
 import com.task.expensetracker.MainScreen
 
-
-
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController, startDestination = "home") {
+    NavHost(navController, startDestination = Screen.Home.route) {
+
         composable(route = Screen.Main.route) {
             MainScreen()
         }
 
-        composable(Screen.Home.route) { HomeScreen(navController) }
+        composable(Screen.Home.route) {
+            HomeScreen(navController = navController)
+        }
+
         composable(Screen.Search.route) {
             val viewModel: ExpenseViewModel = hiltViewModel()
             TransactionSearchScreen(viewModel = viewModel)
         }
 
-        composable(Screen.Create.route) { AlertSettingScreen(viewModel = AlertViewModel())}
-        composable(Screen.Stats.route) { StatsScreen() }
-        composable(Screen.Profile.route) { SettingsScreen() }
+        composable(Screen.Create.route) {
+            val alertViewModel: AlertViewModel = hiltViewModel()
+            AlertSettingScreen(viewModel = alertViewModel)
+        }
 
+        composable(Screen.Stats.route) {
+            StatsScreen()
+        }
 
+        composable(Screen.Profile.route) {
+            SettingsScreen()
+        }
 
         composable(route = "/add_income") {
-            AddExpense(navController, isIncome = true)
+            AddExpense(navController = navController, isIncome = true)
         }
+
         composable(route = "/add_exp") {
-            AddExpense(navController, isIncome = false)
+            AddExpense(navController = navController, isIncome = false)
         }
     }
 }
