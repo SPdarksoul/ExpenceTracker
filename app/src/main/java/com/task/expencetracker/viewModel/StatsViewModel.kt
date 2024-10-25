@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-
 @HiltViewModel
 class StatsViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository
@@ -27,14 +26,22 @@ class StatsViewModel @Inject constructor(
      */
     fun loadExpensesForMonth(month: String) {
         viewModelScope.launch {
-            val expenses = expenseRepository.getExpensesByMonth(month)
-            _entries.value = expenses.filter { expense ->
-                try {
-                    val expenseDate = LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                    expenseDate.month.toString() == month
-                } catch (e: Exception) {
-                    false // Skip entries with invalid date formats
+            try {
+                // Retrieve expenses for the specified month
+                val expenses = expenseRepository.getExpensesByMonth(month)
+
+                // Filter expenses by month
+                _entries.value = expenses.filter { expense ->
+                    try {
+                        val expenseDate = LocalDate.parse(expense.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        expenseDate.format(DateTimeFormatter.ofPattern("yyyy-MM")) == month // Compare formatted date
+                    } catch (e: Exception) {
+                        false // Skip entries with invalid date formats
+                    }
                 }
+            } catch (e: Exception) {
+                // Handle any errors in data retrieval
+                _entries.value = emptyList() // Reset entries on error
             }
         }
     }

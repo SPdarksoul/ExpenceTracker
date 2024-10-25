@@ -10,6 +10,7 @@ import com.task.expencetracker.data.dataTransaction.AddPaymentTransacton
 
 import com.task.expencetracker.data.dataTransaction.PaymentTransaction
 import com.task.expencetracker.data.dataTransaction.Transaction
+import com.task.expencetracker.data.dataTransaction.TransactionAlert
 import com.task.expencetracker.data.model.ExpenceEntity // Corrected spelling
 import kotlinx.coroutines.flow.Flow
 
@@ -76,4 +77,10 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM expense_table WHERE date BETWEEN :startDate AND :endDate")
     suspend fun getExpensesBetweenDates(startDate: String, endDate: String): List<ExpenceEntity>
+
+    @Insert
+    suspend fun addAlert(alert: TransactionAlert)
+
+    @Query("SELECT * FROM transaction_alert_table")
+    fun getAllAlerts(): Flow<List<TransactionAlert>>
 }

@@ -11,11 +11,12 @@ import com.task.expencetracker.data.dao.ExpenseDao
 import com.task.expencetracker.data.dataTransaction.AddPaymentTransacton
 import com.task.expencetracker.data.dataTransaction.PaymentTransaction
 import com.task.expencetracker.data.dataTransaction.Transaction
+import com.task.expencetracker.data.dataTransaction.TransactionAlert
 import com.task.expencetracker.data.model.ExpenceEntity
 
 @Database(
-    entities = [ExpenceEntity::class, PaymentTransaction::class, AddPaymentTransacton::class, Transaction ::class],
-    version = 10,
+    entities = [ExpenceEntity::class, PaymentTransaction::class, AddPaymentTransacton::class, Transaction ::class, TransactionAlert::class],
+    version = 12,
 
     exportSchema = false // Disable schema export
 )

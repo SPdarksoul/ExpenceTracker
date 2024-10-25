@@ -27,3 +27,6 @@ With its sleek design, automatic payment detection, and powerful functionality, 
 for individuals looking to take control of their financial well-being. Start tracking your expenses today and get comprehensive
 insights into your spending patterns!
 
+
+
+

@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.androidx.ui.test.android)
     implementation(libs.firebase.storage.ktx)
     implementation(libs.places)
+    implementation(libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v115)

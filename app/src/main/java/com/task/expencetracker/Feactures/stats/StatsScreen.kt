@@ -97,6 +97,7 @@ fun StatsScreen(viewModel: StatsViewModel = hiltViewModel()) {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
         }
     }
 }
