@@ -2,6 +2,7 @@
 package com.task.expencetracker.database
 
 
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -12,11 +13,12 @@ import com.task.expencetracker.data.dataTransaction.AddPaymentTransacton
 import com.task.expencetracker.data.dataTransaction.PaymentTransaction
 import com.task.expencetracker.data.dataTransaction.Transaction
 import com.task.expencetracker.data.dataTransaction.TransactionAlert
+
 import com.task.expencetracker.data.model.ExpenceEntity
 
 @Database(
     entities = [ExpenceEntity::class, PaymentTransaction::class, AddPaymentTransacton::class, Transaction ::class, TransactionAlert::class],
-    version = 14,
+    version = 15,
 
     exportSchema = false // Disable schema export
 )

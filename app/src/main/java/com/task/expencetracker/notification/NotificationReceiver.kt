@@ -1,51 +1,43 @@
 package com.task.expencetracker.notifications
 
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import androidx.core.app.NotificationCompat
-import android.os.Build
+import com.task.expencetracker.R
+import com.task.expencetracker.data.dataTransaction.TransactionAlert
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class NotificationReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        // Extract alert title or any data from the intent (if needed)
-        val alertTitle = intent?.getStringExtra("alert_title") ?: "No Title"
+    override fun onReceive(context: Context, intent: Intent) {
+        // Extract data from the intent
+        val alert = intent.getParcelableExtra<TransactionAlert>("ALERT_DATA")
 
-        // Create a notification
-        if (context != null) {
-            showNotification(context, alertTitle)
+        // Check if alert is not null
+        alert?.let {
+            sendNotification(context, it)
         }
     }
 
-    private fun showNotification(context: Context, alertTitle: String) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private fun sendNotification(context: Context, alert: TransactionAlert) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val channelId = "ALERT_CHANNEL_ID"
+        val notificationMessage = "Transaction Alert Details:\n" +
+                "Name: ${alert.title}\n" +
+                "Amount: $${alert.amount}\n" +
+                "Date: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(alert.dateTime))}"
 
-        // Create a notification channel for Android 8.0 and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId, "Alert Notifications",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Channel for alert notifications"
-            }
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        // Build the notification
-        val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // Replace with your own icon
-            .setContentTitle("Transaction Alert")
-            .setContentText("Alert for: $alertTitle")
+        val notification = NotificationCompat.Builder(context, "ALERT_CHANNEL_ID")
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle("Transaction Alert Passed")
+            .setContentText("An alert has passed.")
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
             .build()
 
-        // Show the notification
-        notificationManager.notify(1, notification)
+        notificationManager.notify(alert.hashCode(), notification)
     }
 }

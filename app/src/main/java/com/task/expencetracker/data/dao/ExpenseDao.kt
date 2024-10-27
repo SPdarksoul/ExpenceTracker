@@ -1,5 +1,6 @@
 package com.task.expencetracker.data.dao
 
+
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -79,8 +80,8 @@ interface ExpenseDao {
     suspend fun getExpensesBetweenDates(startDate: String, endDate: String): List<ExpenceEntity>
 
     @Insert
-    suspend fun addAlert(alert: TransactionAlert)
+    suspend fun insert(alert: TransactionAlert)
 
-    @Query("SELECT * FROM transaction_alerts") // Ensure correct table name
-    fun getAllAlerts(): Flow<List<TransactionAlert>>
+    @Query("SELECT * FROM transaction_alerts")
+    suspend fun getAllAlerts(): List<TransactionAlert>
 }
