@@ -10,7 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.task.expencetracker.Feactures.home.HomeScreen
 
-import com.task.expencetracker.data.routes.Screen
+
+import com.task.expencetracker.features.about.AboutUsScreen
 import com.task.expencetracker.features.createExpense.AlertSettingScreen
 import com.task.expencetracker.features.search.TransactionSearchScreen
 import com.task.expencetracker.features.stats.StatsScreen
@@ -18,6 +19,7 @@ import com.task.expencetracker.viewModel.AlertViewModel
 
 import com.task.expencetracker.viewModel.ExpenseViewModel
 import com.task.expensetracker.MainScreen
+import com.task.expensetracker.data.routes.Screen
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -43,6 +45,10 @@ fun Navigation(navController: NavHostController) {
 
         composable(Screen.Stats.route) {
             StatsScreen()
+        }
+
+composable(Screen.About.route) {
+            AboutUsScreen()
         }
 
         composable(Screen.Profile.route) {

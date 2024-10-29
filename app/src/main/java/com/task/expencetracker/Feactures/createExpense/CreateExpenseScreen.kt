@@ -4,26 +4,30 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
+import androidx.compose.material3.ExposedDropdownMenuDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.task.expencetracker.data.dataTransaction.TransactionAlert
 import com.task.expencetracker.notification.cancelNotification
-import com.task.expencetracker.notification.scheduleNotification  // Ensure this function is defined correctly.
+import com.task.expencetracker.notification.scheduleNotification
+import com.task.expencetracker.ui.theme.Zinc
 import com.task.expencetracker.uicomponents.ExpenseTextView
 import com.task.expencetracker.viewModel.AlertViewModel
 import java.text.SimpleDateFormat
@@ -31,6 +35,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertSettingScreen(viewModel: AlertViewModel = hiltViewModel()) {
     var title by remember { mutableStateOf("") }
@@ -47,133 +52,169 @@ fun AlertSettingScreen(viewModel: AlertViewModel = hiltViewModel()) {
     val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState())
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState())
+            .background(Color(0xFFE3F2FD)) // Light blue background
     ) {
-        ExpenseTextView(
+        EnhancedExpenseTextView(text = "Set Transaction Alert")
 
-            text = "Set Transaction Alert",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(vertical = 16.dp).background(color = Color.LightGray)
-        )
+        // Title Input with Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Card elevation
+        ) {
+            OutlinedTextField(
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Alert Title") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = outlinedTextFieldColors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
+            )
+        }
 
-        // Title Input.
-        OutlinedTextField(
-            value = title,
-            onValueChange = { title = it },
-            label = { Text("Alert Title") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
 
-        Spacer(modifier = Modifier.height(12.dp))
 
-        // Amount Input.
+    // Amount Input with Card
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Card elevation
+    ) {
         OutlinedTextField(
             value = amount,
             onValueChange = { amount = it },
             label = { Text("Amount") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            singleLine = true
+            singleLine = true,
+            colors = outlinedTextFieldColors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
+            )
         )
+    }
+        Row {
+            // Date Picker Row.
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                ExpenseTextView(
+                    "Date: ${dateFormatter.format(Date(dateTime))}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Button(
+                    onClick = { showDatePicker = true },
+                    colors = ButtonDefaults.buttonColors(containerColor = Zinc),
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    ExpenseTextView("Pick Date", color = Color.White)
+                }
+            }
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.padding(24.dp))
+            // Time Picker Row.
+            Column(
+modifier = Modifier.padding(8.dp)
+            ) {
+                ExpenseTextView(
+                    "Time: ${timeFormatter.format(Date(dateTime))}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Button(
+                    onClick = { showTimePicker = true },
+                    colors = ButtonDefaults.buttonColors(containerColor = Zinc),
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    ExpenseTextView("Pick Time", color = Color.White)
+                }
+            }
 
-        // Date Picker Row.
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Date: ${dateFormatter.format(Date(dateTime))}", style = MaterialTheme.typography.bodyLarge)
-            Button(onClick = { showDatePicker = true }) {
-                Text("Pick Date")
+            // Date Picker Dialog.
+            if (showDatePicker) {
+                DatePickerDialog(
+                    context,
+                    { _, year, month, dayOfMonth ->
+                        calendar.set(year, month, dayOfMonth)
+                        dateTime = calendar.timeInMillis
+                        showDatePicker = false
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+
+            // Time Picker Dialog.
+            if (showTimePicker) {
+                TimePickerDialog(
+                    context,
+                    { _, hourOfDay, minute ->
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                        calendar.set(Calendar.MINUTE, minute)
+                        dateTime = calendar.timeInMillis
+                        showTimePicker = false
+                    },
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true // Use 24-hour format.
+                ).show()
             }
         }
+            // Add Alert Button with Ripple Effect
+            Button(
+                onClick = {
+                    if (title.isNotBlank() && amount.isNotBlank() && amount.toDoubleOrNull() != null && amount.toDouble() > 0) {
+                        val alert = TransactionAlert(
+                            title = title,
+                            amount = amount.toDouble().toString(),
+                            dateTime = dateTime
+                        )
+                        viewModel.addAlert(alert)
+
+                        // Schedule notification with correct details.
+                        scheduleNotification(context, alert)
+
+                        // Reset fields after adding alert.
+                        title = ""
+                        amount = ""
+                        dateTime =
+                            System.currentTimeMillis() // Reset to current time after adding alert.
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Zinc) // Zinc color
+            ) {
+                ExpenseTextView("Add Alert", color = Color.White)
+            }
+
+        // Display Existing Alerts Header.
+        EnhancedExpenseTextView(text = "Existing Alerts")
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Time Picker Row.
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Time: ${timeFormatter.format(Date(dateTime))}", style = MaterialTheme.typography.bodyLarge)
-            Button(onClick = { showTimePicker = true }) {
-                Text("Pick Time")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Date Picker Dialog.
-        if (showDatePicker) {
-            DatePickerDialog(
-                context,
-                { _, year, month, dayOfMonth ->
-                    calendar.set(year, month, dayOfMonth)
-                    dateTime = calendar.timeInMillis
-                    showDatePicker = false
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-
-        // Time Picker Dialog.
-        if (showTimePicker) {
-            TimePickerDialog(
-                context,
-                { _, hourOfDay, minute ->
-                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    calendar.set(Calendar.MINUTE, minute)
-                    dateTime = calendar.timeInMillis
-                    showTimePicker = false
-                },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                true // Use 24-hour format.
-            ).show()
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Add Alert Button.
-        Button(
-            onClick = {
-                if (title.isNotBlank() && amount.isNotBlank() && amount.toDoubleOrNull() != null && amount.toDouble() > 0) {
-                    val alert = TransactionAlert(
-                        title = title,
-                        amount = amount.toDouble().toString(),
-                        dateTime = dateTime
-                    )
-                    viewModel.addAlert(alert)
-
-                    // Schedule notification with correct details.
-                    scheduleNotification(context, alert)
-
-                    // Reset fields after adding alert.
-                    title = ""
-                    amount = ""
-                    dateTime = System.currentTimeMillis() // Reset to current time after adding alert.
-                }
-            },
-            modifier=Modifier.fillMaxWidth()
-        ) {
-            Text("Add Alert")
-        }
-
-        Spacer(modifier=Modifier.height(16.dp))
-
-        // Display Existing Alerts Header.
-        Text("Existing Alerts", style=MaterialTheme.typography.titleMedium)
-
-        Spacer(modifier=Modifier.height(8.dp))
-
         // Display list of alerts.
-        val alertList by viewModel.alerts.collectAsState(initial=emptyList())
+        val alertList by viewModel.alerts.collectAsState(initial = emptyList())
 
         if (alertList.isEmpty()) {
-            Text("No alerts available", style=MaterialTheme.typography.bodyLarge)
+            ExpenseTextView("No alerts available", style = MaterialTheme.typography.bodyLarge)
         } else {
-            Column(modifier=Modifier.padding(vertical=8.dp)) {
+            Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 alertList.forEach { alert ->
                     AlertCard(alert, viewModel, context)
-                    Spacer(modifier=Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
@@ -182,29 +223,71 @@ fun AlertSettingScreen(viewModel: AlertViewModel = hiltViewModel()) {
 
 @Composable
 fun AlertCard(alert: TransactionAlert, viewModel: AlertViewModel, context: Context) {
-    val dateFormatter=SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    val dateText=dateFormatter.format(Date(alert.dateTime))
+    val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    val dateText = dateFormatter.format(Date(alert.dateTime))
 
     Card(
-        modifier=Modifier.fillMaxWidth().padding(8.dp),
-        elevation=CardDefaults.cardElevation(4.dp)
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F8E9))
     ) {
-        Column(modifier=Modifier.padding(16.dp)) {
-            Text(text=alert.title, style=MaterialTheme.typography.bodyLarge)
-            Spacer(modifier=Modifier.height(4.dp))
-            Text(text="Amount: $${alert.amount}", style=MaterialTheme.typography.bodyMedium)
-            Spacer(modifier=Modifier.height(4.dp))
-            Text(text="Date: $dateText", style=MaterialTheme.typography.bodySmall)
+        Column(modifier = Modifier.padding(16.dp)) {
+            ExpenseTextView(text = alert.title, style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.height(4.dp))
+            ExpenseTextView(text = "Amount: $${alert.amount}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(4.dp))
+            ExpenseTextView(text = "Date: $dateText", style = MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.height(8.dp))
+            Divider(color = Color.Gray.copy(alpha = 0.5f), thickness = 1.dp) // Divider for separation
 
-            Spacer(modifier=Modifier.height(8.dp))
-
-            // Settle Button to delete the alert and cancel notification.
-            Button(onClick={
-                viewModel.deleteAlert(alert)
-                cancelNotification(context, alert)
-            }) {
-                Text("Settle")
-            }
+            CustomButton(
+                onClick = {
+                    viewModel.deleteAlert(alert)
+                    cancelNotification(context, alert)
+                },
+                text = "Settle"
+            )
         }
+    }
+}
+
+@Composable
+fun CustomButton(onClick: () -> Unit, text: String) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp)),
+        colors = ButtonDefaults.buttonColors(containerColor = Zinc)
+    ) {
+        ExpenseTextView(text = text, color = Color.White)
+    }
+}
+@Composable
+fun EnhancedExpenseTextView(text: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(Color(0xFF2F7E79), Color(0xFF25A969)) // Gradient colors
+                ),
+                shape = RoundedCornerShape(8.dp) // Rounded corners
+            )
+            .border(2.dp, Color.Black, RoundedCornerShape(8.dp)) // Border color and shape
+            .shadow(4.dp, RoundedCornerShape(8.dp)) // Shadow effect
+            .padding(16.dp)
+            .size(14.dp)
+    ) {
+        ExpenseTextView(
+            text = text,
+            modifier = Modifier.align(Alignment.Center), color = Color.White,
+            style = TextStyle(
+                fontWeight = FontWeight.Bold
+            )
+
+        )
     }
 }

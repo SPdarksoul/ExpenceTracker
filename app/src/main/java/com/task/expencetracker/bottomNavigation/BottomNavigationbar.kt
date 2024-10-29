@@ -1,15 +1,19 @@
 package com.task.expencetracker.bottomNavigation
 
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.task.expencetracker.R
 import com.task.expencetracker.uicomponents.ExpenseTextView
+
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -30,7 +34,8 @@ fun BottomNavigationBar(navController: NavController) {
                 icon = {
                     Icon(
                         painter = painterResource(id = item.icon),
-                        contentDescription = item.label
+                        contentDescription = item.label,
+                      modifier = Modifier.size(24.dp)
                     )
                 },
                 label = { ExpenseTextView(text = item.label) },
@@ -55,7 +60,7 @@ fun BottomNavigationBar(navController: NavController) {
 sealed class BottomNavItem(val label: String, val icon: Int, val route: String) {
     object Home : BottomNavItem("Home", R.drawable.home, "home")
     object Search : BottomNavItem("Search", R.drawable.baseline_search_24, "search")
-    object Create : BottomNavItem("Create", R.drawable.create, "create")
+    object Create : BottomNavItem("Alert", R.drawable.create, "create")
     object Stats : BottomNavItem("Stats", R.drawable.stats, "stats")
-    object Profile : BottomNavItem("Profile", R.drawable.baseline_person_24, "profile")
+    object Profile : BottomNavItem("Setting", R.drawable.setting, "profile")
 }
