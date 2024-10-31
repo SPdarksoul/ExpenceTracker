@@ -4,11 +4,12 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.task.expencetracker.data.dataTransaction.TransactionAlert
+import com.task.expencetracker.data.dataTransaction.TransactionAlertEntity
+
 import com.task.expencetracker.notifications.NotificationReceiver
 
 // Schedule notification with AlarmManager
-fun scheduleNotification(context: Context, alert: TransactionAlert) {
+fun scheduleNotification(context: Context, alert: TransactionAlertEntity) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, NotificationReceiver::class.java).apply {
         putExtra("title", alert.title)

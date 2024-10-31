@@ -11,7 +11,8 @@ import com.task.expencetracker.data.dataTransaction.AddPaymentTransacton
 
 import com.task.expencetracker.data.dataTransaction.PaymentTransaction
 import com.task.expencetracker.data.dataTransaction.Transaction
-import com.task.expencetracker.data.dataTransaction.TransactionAlert
+import com.task.expencetracker.data.dataTransaction.TransactionAlertEntity
+
 import com.task.expencetracker.data.model.ExpenceEntity // Corrected spelling
 import kotlinx.coroutines.flow.Flow
 
@@ -79,9 +80,12 @@ interface ExpenseDao {
     @Query("SELECT * FROM expense_table WHERE date BETWEEN :startDate AND :endDate")
     suspend fun getExpensesBetweenDates(startDate: String, endDate: String): List<ExpenceEntity>
 
-    @Insert
-    suspend fun insert(alert: TransactionAlert)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAlert(alert: TransactionAlertEntity)
+
+    @Delete
+    suspend fun deleteAlert(alert: TransactionAlertEntity)
 
     @Query("SELECT * FROM transaction_alerts")
-    suspend fun getAllAlerts(): List<TransactionAlert>
+    fun getAllAlerts(): Flow<List<TransactionAlertEntity>>
 }

@@ -1,32 +1,22 @@
 package com.task.expencetracker.data.repo
 
-import com.task.expencetracker.data.dataTransaction.TransactionAlert
+import com.task.expencetracker.data.dao.ExpenseDao
+import com.task.expencetracker.data.dataTransaction.TransactionAlertEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
 
-interface AlertRepository {
-    suspend fun addAlert(alert: TransactionAlert)
-    suspend fun getAlerts(): Flow<List<TransactionAlert>>
-    suspend fun deleteAlert(alert: TransactionAlert)
-}
+class AlertRepository @Inject constructor(private val dao: ExpenseDao) {
 
-class AlertRepositoryImpl : AlertRepository {
+    // Fetches all alerts as a Flow of TransactionAlertEntity list
+    val alerts: Flow<List<TransactionAlertEntity>> = dao.getAllAlerts()
 
-    // In-memory storage for demonstration; replace with actual data source (e.g., Room or Retrofit)
-    private val alerts = ConcurrentHashMap<Long, TransactionAlert>()
-
-    override suspend fun addAlert(alert: TransactionAlert) {
-        alerts[alert.dateTime] = alert // Using dateTime as a unique key for simplicity
+    // Adds an alert directly as TransactionAlertEntity
+    suspend fun addAlert(alert: TransactionAlertEntity) {
+        dao.insertAlert(alert)
     }
 
-    override suspend fun getAlerts(): Flow<List<TransactionAlert>> {
-        return flow {
-            emit(alerts.values.toList()) // Emit current list of alerts
-        }
-    }
-
-    override suspend fun deleteAlert(alert: TransactionAlert) {
-        alerts.remove(alert.dateTime) // Remove alert by dateTime key
+    // Deletes an alert directly as TransactionAlertEntity
+    suspend fun deleteAlert(alert: TransactionAlertEntity) {
+        dao.deleteAlert(alert)
     }
 }

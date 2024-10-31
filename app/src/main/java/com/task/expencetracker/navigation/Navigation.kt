@@ -8,7 +8,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.task.expencetracker.Feactures.budgettingTool
+import com.task.expencetracker.Feactures.helpAndContact.HelpAndContact
 import com.task.expencetracker.Feactures.home.HomeScreen
+import com.task.expencetracker.Feactures.termsandcondition.PrivacyPolice
+import com.task.expencetracker.Feactures.termsandcondition.TermServies
+import com.task.expencetracker.Feactures.termsandcondition.TermsPermissions
+import com.task.expencetracker.Feactures.termsandcondition.Termscondition
 
 
 import com.task.expencetracker.features.about.AboutUsScreen
@@ -52,7 +58,26 @@ composable(Screen.About.route) {
         }
 
         composable(Screen.Profile.route) {
-            SettingsScreen()
+            SettingsScreen(navController)
+        }
+
+        composable(Screen.Bugeting.route) {
+            budgettingTool()
+        }
+        composable(Screen.Help.route) {
+            HelpAndContact()
+        }
+        composable(Screen.Sevices.route) {
+            TermServies()
+        }
+        composable(Screen.Conditions.route) {
+            Termscondition()
+        }
+ composable(Screen.Permissions.route) {
+            TermsPermissions()
+        }
+ composable(Screen.Privacy.route) {
+            PrivacyPolice(navController)
         }
 
         composable(route = "/add_income") {

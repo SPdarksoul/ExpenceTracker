@@ -1,7 +1,9 @@
+import android.service.autofill.OnClickAction
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Create
@@ -15,18 +17,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
-import com.task.expencetracker.R
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.task.expencetracker.Feactures.termsandcondition.PrivacyPolice
+import com.task.expencetracker.navigation.Navigation
 import com.task.expencetracker.ui.theme.Zinc
 import com.task.expencetracker.uicomponents.ExpenseTextView
 
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -88,11 +92,11 @@ fun SettingsScreen() {
                 SettingsMenuLink(
                     title = "Terms of Service",
                     icon = Icons.Filled.Create
-                ) { /* TODO: Show Terms of Service */ }
+                ) { navController.navigate("service") }
                 SettingsMenuLink(
                     title = "Privacy Policy",
-                    icon = Icons.Filled.Lock
-                ) { /* TODO: Show Privacy Policy */ }
+                    icon = Icons.Filled.Lock,
+                ) { navController.navigate("privacy")}
             }
         }
 
@@ -131,8 +135,8 @@ fun SettingsMenuLink(title: String, icon: ImageVector, onClick: () -> Unit) {
             .clickable(onClick = onClick)
             .padding(12.dp),
         shape = MaterialTheme.shapes.small,
-//        colors = CardDefaults.cardColors(containerColor = Zinc), // Highlight color
-//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Elevation for depth
+        colors = CardDefaults.cardColors(containerColor = Color.White), // Highlight color
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Elevation for depth
     ) {
         Row(
             modifier = Modifier
@@ -179,10 +183,10 @@ fun SettingsSwitch(title: String, icon: ImageVector, onCheckedChange: (Boolean) 
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSettingsScreen() {
-    MaterialTheme {
-        SettingsScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewSettingsScreen() {
+//    MaterialTheme {
+//        SettingsScreen()
+//    }
+//}

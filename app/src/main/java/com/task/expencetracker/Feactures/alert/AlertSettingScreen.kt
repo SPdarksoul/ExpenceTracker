@@ -24,7 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.task.expencetracker.data.dataTransaction.TransactionAlert
+import com.task.expencetracker.data.dataTransaction.TransactionAlertEntity
+
 import com.task.expencetracker.notification.cancelNotification
 import com.task.expencetracker.notification.scheduleNotification
 import com.task.expencetracker.ui.theme.Zinc
@@ -175,7 +176,7 @@ modifier = Modifier.padding(8.dp)
             Button(
                 onClick = {
                     if (title.isNotBlank() && amount.isNotBlank() && amount.toDoubleOrNull() != null && amount.toDouble() > 0) {
-                        val alert = TransactionAlert(
+                        val alert = TransactionAlertEntity(
                             title = title,
                             amount = amount.toDouble().toString(),
                             dateTime = dateTime
@@ -222,7 +223,7 @@ modifier = Modifier.padding(8.dp)
 }
 
 @Composable
-fun AlertCard(alert: TransactionAlert, viewModel: AlertViewModel, context: Context) {
+fun AlertCard(alert: TransactionAlertEntity, viewModel: AlertViewModel, context: Context) {
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     val dateText = dateFormatter.format(Date(alert.dateTime))
 

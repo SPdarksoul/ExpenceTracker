@@ -58,9 +58,9 @@ fun BottomNavigationBar(navController: NavController) {
 }
 
 sealed class BottomNavItem(val label: String, val icon: Int, val route: String) {
-    object Home : BottomNavItem("Home", R.drawable.home, "home")
-    object Search : BottomNavItem("Search", R.drawable.baseline_search_24, "search")
-    object Create : BottomNavItem("Alert", R.drawable.create, "create")
-    object Stats : BottomNavItem("Stats", R.drawable.stats, "stats")
-    object Profile : BottomNavItem("Setting", R.drawable.setting, "profile")
+    data object Home : BottomNavItem("Home", R.drawable.home, "home")
+    data object Search : BottomNavItem("Search", R.drawable.baseline_search_24, "search")
+    data object Create : BottomNavItem("Alert", R.drawable.alarm, "create")
+    data object Stats : BottomNavItem("Stats", R.drawable.stats, "stats")
+    data object Profile : BottomNavItem("Setting", R.drawable.setting, "profile")
 }
