@@ -2,6 +2,8 @@ package com.task.expensetracker.data.routes
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
+    object Hello : Screen("hello")
+
     object Search : Screen("search")
     object Create : Screen("create")
     object Stats : Screen("stats")

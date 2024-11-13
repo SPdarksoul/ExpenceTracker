@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.task.expencetracker.R
 import com.task.expencetracker.uicomponents.ExpenseTextView
-
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -35,7 +35,7 @@ fun BottomNavigationBar(navController: NavController) {
                     Icon(
                         painter = painterResource(id = item.icon),
                         contentDescription = item.label,
-                      modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 },
                 label = { ExpenseTextView(text = item.label) },

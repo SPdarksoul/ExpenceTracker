@@ -1,97 +1,138 @@
-package com.task.expencetracker.Feactures.termsandcondition
+package com.task.expensetracker.features.privacy
 
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PrivacyPolicyScreen() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Privacy Policy", color = Color.White) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF6200EE))
+            )
+        },
+        content = { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Welcome to Expense tracker app. This Privacy Policy outlines our practices regarding the collection, use, and disclosure of information that you may provide when using our application.",
+                    fontSize = 14.sp,
+                    color = Color.DarkGray,
+                    textAlign = TextAlign.Justify
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Using SectionText function for each section
+                SectionText(
+                    title = "1. Information We Collect",
+                    content = """
+                        1.1 Personal Information
+                        We may collect personal information that you provide directly, such as your name, email address, and financial details (e.g., income, expenses) when you register or use our app.
+                        
+                        1.2 Automatically Collected Information
+                        We automatically collect certain information about your device and usage of the app, including:
+                        - Device type and operating system
+                        - IP address
+                        - Usage data (e.g., time spent in the app, features used)
+                    """.trimIndent()
+                )
+
+                SectionText(
+                    title = "2. How We Use Your Information",
+                    content = """
+                        We use the information we collect for various purposes, including:
+                        - To provide and maintain our service
+                        - To process your financial data and generate reports
+                        - To improve our application and user experience
+                        - To communicate with you about updates, promotions, or other relevant information
+                    """.trimIndent()
+                )
+
+                SectionText(
+                    title = "3. Information Sharing and Disclosure",
+                    content = """
+                        We do not sell or rent your personal information to third parties. We may share your information in the following circumstances:
+                        - With your explicit consent
+                        - With third-party service providers who assist us in operating our app (e.g., analytics services)
+                        - As required by law or to protect our rights
+                    """.trimIndent()
+                )
+
+                SectionText(
+                    title = "4. Data Security",
+                    content = """
+                        We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure. However, no method of transmission over the internet or electronic storage is completely secure.
+                    """.trimIndent()
+                )
+
+                SectionText(
+                    title = "5. Your Rights",
+                    content = """
+                        You have the right to:
+                        - Access your personal data we hold
+                        - Request correction of any inaccuracies in your data
+                        - Request deletion of your personal data under certain circumstances
+                    """.trimIndent()
+                )
+
+                SectionText(
+                    title = "6. Changes to This Privacy Policy",
+                    content = """
+                        We may update our Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. We encourage you to review this policy periodically for any updates.
+                    """.trimIndent()
+                )
+
+                SectionText(
+                    title = "7. Contact Us",
+                    content = """
+                        If you have any questions about this Privacy Policy or our practices regarding your personal information, please contact us at [Your Contact Email].
+                    """.trimIndent()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+    )
+}
 
 @Composable
-            fun PrivacyPolice(navController: NavController) {
-                // Sample Privacy Policy Text
-                val privacyPolicyText = """
-        Privacy Policy
-
-        Effective Date: [Insert Date]
-
-        At My Go Tour, we respect your privacy and are committed to protecting your personal information. 
-        This privacy policy outlines how we collect, use, and safeguard your information.
-
-        Information We Collect:
-        - Personal Information: When you create an account, we collect personal details such as your name, email address, and profile picture.
-        - Usage Data: We may collect information on how you access and use our app.
-
-        How We Use Your Information:
-        - To provide and maintain our services
-        - To notify you about changes to our services
-        - To allow you to participate in interactive features of our service when you choose to do so
-        - To provide customer support
-        - To gather analysis or valuable information so that we can improve our services
-
-        Data Security:
-        We implement a variety of security measures to maintain the safety of your personal information.
-
-        Changes to This Privacy Policy:
-        We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
-
-        Contact Us:
-        If you have any questions about this Privacy Policy, please contact us at support@expensetracker.com.
-    """.trimIndent()
-
-                // Main Layout with Scroll Support
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .background(Color(0xFFF5F5F5)) // Light gray background for better contrast
-                        .verticalScroll(rememberScrollState()), // Enable vertical scrolling
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    // Header
-                    Text(
-                        text = "Privacy Policy",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2C3E50) // Darker color for better readability
-                    )
-
-                    // Privacy Policy Content
-                    Text(
-                        text = privacyPolicyText,
-                        fontSize = 16.sp,
-                        lineHeight = 24.sp,
-                        color = Color(0xFF34495E) // Slightly lighter than header for contrast
-                    )
-
-                    // Back Button
-                    Button(
-                        onClick = { navController.popBackStack() },
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(top = 16.dp)
-                            .fillMaxWidth(0.3f), // Slightly smaller width
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF2F7E79), // Attractive button color
-                            contentColor = Color.White // White text on button
-                        )
-                    ) {
-                        Text(text = "Back")
-                    }
-                }
-            }
+fun SectionText(
+    title: String,
+    content: String
+) {
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+        Text(
+            text = title,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            color = Color(0xFF6200EE),
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        Text(
+            text = content,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            color = Color.DarkGray,
+            textAlign = TextAlign.Justify,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+    }
+}
