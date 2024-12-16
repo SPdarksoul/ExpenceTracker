@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.task.expencetracker.ui.theme.Zinc
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,7 +21,7 @@ fun PrivacyPolicyScreen() {
         topBar = {
             TopAppBar(
                 title = { Text("Privacy Policy", color = Color.White) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF6200EE))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Zinc)
             )
         },
         content = { padding ->
@@ -123,7 +124,7 @@ fun SectionText(
             text = title,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
-            color = Color(0xFF6200EE),
+            color = Zinc,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(

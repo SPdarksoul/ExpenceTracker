@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.task.expencetracker.Feactures.budget.BudgetEntity
 import com.task.expencetracker.data.dataTransaction.AddPaymentTransacton
 
 import com.task.expencetracker.data.dataTransaction.PaymentTransaction
@@ -88,4 +89,17 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM transaction_alerts")
     fun getAllAlerts(): Flow<List<TransactionAlertEntity>>
+
+
+    @Query("SELECT * FROM budget_table")
+    fun getAllBudgets(): Flow<List<BudgetEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBudget(budget: BudgetEntity)
+
+    @Update
+    suspend fun updateBudget(budget: BudgetEntity)
+
+    @Query("SELECT * FROM budget_table WHERE category = :category LIMIT 1")
+    suspend fun getBudgetByCategory(category: String): BudgetEntity?
 }

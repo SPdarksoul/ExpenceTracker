@@ -21,6 +21,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.task.expencetracker.ui.theme.Zinc
+import com.task.expencetracker.uicomponents.ExpenseTextView
 import com.task.expencetracker.viewModel.StatsViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -50,8 +52,8 @@ fun StatsScreen(viewModel: StatsViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Monthly Statistics", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF6200EE))
+                title = { ExpenseTextView("Monthly Statistics", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Zinc)
             )
         }
     ) { innerPadding ->
@@ -70,7 +72,7 @@ fun StatsScreen(viewModel: StatsViewModel = hiltViewModel()) {
                 CircularProgressIndicator(modifier = Modifier.padding(16.dp))
             } else {
                 errorMessage?.let {
-                    Text(text = it, color = Color.Red, modifier = Modifier.padding(16.dp))
+                    ExpenseTextView(text = it, color = Color.Black, modifier = Modifier.padding(16.dp))
                 } ?: run {
                     // Display chart if data exists
                     val entries by viewModel.entries.collectAsState()
@@ -78,7 +80,7 @@ fun StatsScreen(viewModel: StatsViewModel = hiltViewModel()) {
                     if (chartEntries.isNotEmpty()) {
                         LineChartView(expenses = chartEntries)
                     } else {
-                        Text("No valid data available for $selectedMonth")
+                        ExpenseTextView("No valid data available for $selectedMonth")
                     }
                 }
             }
@@ -109,7 +111,7 @@ fun MonthButton(label: String, onClick: () -> Unit) {
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier.padding(horizontal = 8.dp)
     ) {
-        Text(text = label)
+        ExpenseTextView(text = label)
     }
 }
 

@@ -2,30 +2,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature
-        android:name="android.hardware.telephony"
-        android:required="false" />
+    <!-- Features -->
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".AppApplication"
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/Sagar"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/Theme.ExpenceTracker">
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/Sagar"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ExpenceTracker">
 
-    <activity android:name=".MainActivity"
+        <!-- Main Activity -->
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +35,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Accessibility Service Definition -->
+        <!-- Accessibility Service -->
         <service
             android:name=".accessibility.AccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
@@ -46,7 +48,7 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-<!--         SMS Receiver Definition -->
+        <!-- SMS Receiver -->
         <receiver
             android:name=".accessibility.SmsReceiver"
             android:permission="android.permission.RECEIVE_SMS"
@@ -56,11 +58,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <!-- Register NotificationReceiver -->
-        <receiver android:name=".notifications.NotificationReceiver" />
 
-        <!-- Required if you want alarms to persist after reboot -->
-        <receiver android:name=".notification.BootReceiver"
+        <!-- Boot Receiver for Alarms -->
+        <receiver
+            android:name=".notification.BootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -68,8 +69,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- Notification Listener Service Definition -->
-
+        <!-- Notification Listener Service -->
         <service
             android:name=".accessibility.PaymentNotificationListener"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"

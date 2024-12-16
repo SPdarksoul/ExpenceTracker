@@ -1,30 +1,11 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,33 +16,39 @@ import androidx.navigation.NavController
 import com.task.expencetracker.ui.theme.Zinc
 import com.task.expencetracker.uicomponents.ExpenseTextView
 
-
 @Composable
 fun SettingsScreen(navController: NavController) {
+    // States for notifications
+    var expenseAlertsEnabled by remember { mutableStateOf(false) }
+    var transactionNotificationsEnabled by remember { mutableStateOf(false) }
+    var currencyConversionEnabled by remember { mutableStateOf(false) }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-
     ) {
         // Title
-
         item {
-            Text(text = "Settings", style = MaterialTheme.typography.headlineLarge, color = Color.Black)
+            Text(
+                text = "Settings",
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.Black
+            )
             Spacer(modifier = Modifier.height(16.dp))
         }
 
         // Account Management Section
         item {
-            SettingsCategory(title = "Account Management") {
+            SettingsCategory(title = "Usage ") {
                 SettingsMenuLink(
-                    title = "User Profile",
+                    title = "About Us",
                     icon = Icons.Filled.Person
-                ) { /* TODO: Navigate to User Profile */ }
+                ) {  navController.navigate("about") }
                 SettingsMenuLink(
-                    title = "Linked Accounts",
+                    title = "Help & Support",
                     icon = Icons.Filled.AccountBox
-                ) { /* TODO: Manage Linked Accounts */ }
+                ) {  navController.navigate("help") }
             }
         }
 
@@ -74,8 +61,13 @@ fun SettingsScreen(navController: NavController) {
                 ) { /* TODO: Set Default Currency */ }
                 SettingsCheckbox(
                     title = "Currency Conversion",
-                    icon = Icons.Filled.List
-                ) { isChecked -> /* TODO: Handle Checkbox State */ }
+                    icon = Icons.Filled.List,
+                    isChecked = currencyConversionEnabled,
+                    onCheckedChange = { isChecked ->
+                        currencyConversionEnabled = isChecked
+                        // Handle Currency Conversion state change
+                    }
+                )
             }
         }
 
@@ -84,12 +76,32 @@ fun SettingsScreen(navController: NavController) {
             SettingsCategory(title = "Notification Preferences") {
                 SettingsSwitch(
                     title = "Expense Alerts",
-                    icon = Icons.Filled.Notifications
-                ) { isChecked -> /* TODO: Handle Switch State */ }
+                    icon = Icons.Filled.Notifications,
+                    isChecked = expenseAlertsEnabled,
+                    onCheckedChange = { isChecked ->
+                        expenseAlertsEnabled = isChecked
+                        // Handle Expense Alerts state change
+                        if (isChecked) {
+                            // Enable Expense Alerts
+                        } else {
+                            // Disable Expense Alerts
+                        }
+                    }
+                )
                 SettingsSwitch(
                     title = "Transaction Notifications",
-                    icon = Icons.Filled.Notifications
-                ) { isChecked -> /* TODO: Handle Switch State */ }
+                    icon = Icons.Filled.Notifications,
+                    isChecked = transactionNotificationsEnabled,
+                    onCheckedChange = { isChecked ->
+                        transactionNotificationsEnabled = isChecked
+                        // Handle Transaction Notifications state change
+                        if (isChecked) {
+                            // Enable Transaction Notifications
+                        } else {
+                            // Disable Transaction Notifications
+                        }
+                    }
+                )
             }
         }
 
@@ -103,14 +115,18 @@ fun SettingsScreen(navController: NavController) {
                 SettingsMenuLink(
                     title = "Privacy Policy",
                     icon = Icons.Filled.Lock,
-                ) { navController.navigate("privacy")}
+                ) { navController.navigate("privacy") }
             }
         }
 
         // App Version Information Section
         item {
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "App Version: 1.0.0", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+            Text(
+                text = "App Version: 1.0.0",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Black
+            )
             Spacer(modifier = Modifier.height(16.dp)) // Optional spacing at the bottom
         }
     }
@@ -121,13 +137,16 @@ fun SettingsCategory(title: String, content: @Composable () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding( 8.dp)
+            .padding(8.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(Zinc)
             .padding(16.dp)
-//            .shadow(1.dp, MaterialTheme.shapes.medium) // Add shadow for depth
     ) {
-        ExpenseTextView(text = title, style = MaterialTheme.typography.titleMedium,color = Color.Black)
+        ExpenseTextView(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = Color.Black
+        )
         Spacer(modifier = Modifier.height(8.dp))
         content()
     }
@@ -142,8 +161,8 @@ fun SettingsMenuLink(title: String, icon: ImageVector, onClick: () -> Unit) {
             .clickable(onClick = onClick)
             .padding(12.dp),
         shape = MaterialTheme.shapes.small,
-        colors = CardDefaults.cardColors(containerColor = Color.White), // Highlight color
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Elevation for depth
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier
@@ -151,7 +170,7 @@ fun SettingsMenuLink(title: String, icon: ImageVector, onClick: () -> Unit) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(icon, contentDescription = null,)
+            Icon(icon, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = title, style = MaterialTheme.typography.bodyLarge, color = Color.Black)
         }
@@ -159,41 +178,52 @@ fun SettingsMenuLink(title: String, icon: ImageVector, onClick: () -> Unit) {
 }
 
 @Composable
-fun SettingsCheckbox(title: String, icon: ImageVector, onCheckedChange: (Boolean) -> Unit) {
+fun SettingsCheckbox(
+    title: String,
+    icon: ImageVector,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding( 12.dp),
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(icon, contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))
-        ExpenseTextView(text = title,  color = Color.Black)
+        ExpenseTextView(text = title, color = Color.Black)
         Spacer(modifier = Modifier.weight(1f))
-        Checkbox(checked = false, onCheckedChange = onCheckedChange)
+        Checkbox(checked = isChecked, onCheckedChange = onCheckedChange)
     }
 }
 
 @Composable
-fun SettingsSwitch(title: String, icon: ImageVector, onCheckedChange: (Boolean) -> Unit) {
+fun SettingsSwitch(
+    title: String,
+    icon: ImageVector,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding( 12.dp),
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(icon, contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = title, color = Color.Black)
+        ExpenseTextView(text = title, color = Color.Black)
         Spacer(modifier = Modifier.weight(1f))
-        Switch(checked = false, onCheckedChange = onCheckedChange)
+        Switch(
+            checked = isChecked,
+            onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color.Black, // Thumb color when checked
+                uncheckedThumbColor = Color.White, // Thumb color when unchecked
+                checkedTrackColor = Color.Black.copy(alpha = 0.5f), // Track color when checked
+                uncheckedTrackColor = Color.White.copy(alpha = 0.5f) // Track color when unchecked
+            )
+        )
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewSettingsScreen() {
-//    MaterialTheme {
-//        SettingsScreen()
-//    }
-//}
