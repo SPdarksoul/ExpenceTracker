@@ -28,6 +28,7 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     /**
+     * hejjo
      * Updates the spent amount of a budget for a specific category.
      *
      * @param category The category of the budget to be updated.
